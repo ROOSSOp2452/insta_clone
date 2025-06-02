@@ -1,0 +1,23 @@
+<h2>Chat with {{ username }}</h2>
+<div id="chat-log"></div>
+<input type="text" id="chat-message-input" autocomplete="off" />
+<button id="chat-message-submit">Send</button>
+
+<script>
+const username = "{{ username }}";
+const chatSocket = new WebSocket(
+    'ws://' + window.location.host + '/ws/chat/' + username + '/'
+);
+
+chatSocket.onmessage = function(e) {
+    const data = JSON.parse(e.data);
+    document.querySelector('#chat-log').innerHTML += `<p><b>${data.sender}</b>: ${data.message}</p>`;
+};
+
+document.querySelector('#chat-message-submit').onclick = function(e) {
+    const input = document.querySelector('#chat-message-input');
+    const message = input.value;
+    chatSocket.send(JSON.stringify({'message': message}));
+    input.value = '';
+};
+</script>

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Conversation with {{ other_user.username }}</h2>
+
+<div id="chat-log" style="height:300px; overflow-y:auto; border:1px solid #ccc;">
+  {% for msg in messages %}
+    <div><strong>{{ msg.sender.username }}:</strong> {{ msg.body }}</div>
+  {% endfor %}
+</div>
+
+<textarea id="chat-message-input" rows="3" cols="50"></textarea><br>
+<button id="chat-message-submit">Send</button>
+
+<script>
+  const username = "{{ other_user.username }}"
+  const chatSocket = new WebSocket(
+    'ws://' + window.location.host + '/ws/chat/' + username + '/'
+  );
+
+  chatSocket.onmessage = function(e) {
+    const data = JSON.parse(e.data);
+    document.querySelector('#chat-log').innerHTML += `<div><strong>${data.sender}:</strong> ${data.message}</div>`;
+  };
+
+  document.querySelector('#chat-message-submit').onclick = function(e) {
+    const messageInput = document.querySelector('#chat-message-input');
+    const message = messageInput.value;
+    chatSocket.send(JSON.stringify({ 'message': message }));
+    messageInput.value = '';
+  };
+</script>
+{% endblock %}

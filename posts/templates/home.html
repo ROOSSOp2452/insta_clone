@@ -1,0 +1,420 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Home - Insta Clone</title>
+  <link rel="stylesheet" href="{% static 'posts/styles.css' %}">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: #fafafa;
+      color: #262626;
+    }
+
+    /* Header */
+    .header {
+      background: white;
+      border-bottom: 1px solid #dbdbdb;
+      padding: 0 20px;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 100;
+      height: 54px;
+      display: flex;
+      align-items: center;
+    }
+
+    .header-container {
+      max-width: 975px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: bold;
+      background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-decoration: none;
+    }
+
+    .header-nav {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .header-nav a {
+      text-decoration: none;
+      color: #262626;
+      font-weight: 500;
+      padding: 8px 12px;
+      border-radius: 4px;
+      transition: background-color 0.2s;
+    }
+
+    .header-nav a:hover {
+      background-color: #f5f5f5;
+    }
+
+    .user-info {
+      font-weight: 600;
+      color: #262626;
+    }
+
+    /* Main content */
+    .main-container {
+      max-width: 614px;
+      margin: 0 auto;
+      padding-top: 84px;
+      padding-bottom: 20px;
+    }
+
+    .welcome-message {
+      background: white;
+      border: 1px solid #dbdbdb;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .welcome-message h1 {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    /* Post card */
+    .post-card {
+      background: white;
+      border: 1px solid #dbdbdb;
+      border-radius: 8px;
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+
+    .post-header {
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #efefef;
+    }
+
+    .post-header .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 14px;
+      margin-right: 12px;
+    }
+
+    .post-header a {
+      text-decoration: none;
+      color: #262626;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .post-header a:hover {
+      text-decoration: underline;
+    }
+
+    .post-image {
+      width: 100%;
+      max-height: 614px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .post-actions {
+      padding: 12px 16px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .post-actions form {
+      margin: 0;
+    }
+
+    .like-btn {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 8px;
+      margin: -8px;
+      transition: transform 0.1s;
+    }
+
+    .like-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .like-btn:active {
+      transform: scale(0.95);
+    }
+
+    .likes-count {
+      font-weight: 600;
+      font-size: 14px;
+      padding: 0 16px 8px;
+      margin: 0;
+    }
+
+    .post-caption {
+      padding: 0 16px 8px;
+      margin: 0;
+      font-size: 14px;
+      line-height: 18px;
+    }
+
+    .post-time {
+      padding: 0 16px 12px;
+      margin: 0;
+      font-size: 10px;
+      color: #8e8e8e;
+      text-transform: uppercase;
+      letter-spacing: 0.2px;
+    }
+
+    /* Comments */
+    .comments-section {
+      border-top: 1px solid #efefef;
+      padding: 12px 16px;
+    }
+
+    .comments-header {
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 12px;
+      color: #8e8e8e;
+    }
+
+    .comments-list {
+      list-style: none;
+      margin-bottom: 12px;
+    }
+
+    .comment-item {
+      margin-bottom: 4px;
+      font-size: 14px;
+      line-height: 18px;
+    }
+
+    .comment-item b {
+      font-weight: 600;
+      margin-right: 4px;
+    }
+
+    .comment-form {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-top: 1px solid #efefef;
+      padding-top: 12px;
+      margin-top: 12px;
+    }
+
+    .comment-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 14px;
+      padding: 8px 0;
+      background: none;
+    }
+
+    .comment-input::placeholder {
+      color: #8e8e8e;
+    }
+
+    .comment-btn {
+      background: none;
+      border: none;
+      color: #0095f6;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .comment-btn:hover {
+      color: #00376b;
+    }
+
+    .comment-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .no-posts {
+      text-align: center;
+      padding: 60px 20px;
+      color: #8e8e8e;
+    }
+
+    .no-posts h2 {
+      font-size: 22px;
+      font-weight: 300;
+      margin-bottom: 16px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .header {
+        padding: 0 16px;
+      }
+      
+      .main-container {
+        max-width: 100%;
+        padding-left: 0;
+        padding-right: 0;
+      }
+      
+      .post-card {
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+      }
+      
+      .welcome-message {
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <div class="header">
+    <div class="header-container">
+      <a href="#" class="logo">Instaclone</a>
+      <div class="header-nav">
+        <a href="{% url 'messages_app:inbox' %}">💬 Messages</a>
+        <a href="{% url 'create_post' %}">➕ New Post</a>
+        <a href="{% url 'profile' username=request.user.username %}">👤 Profile</a>
+        <a href="{% url 'logout' %}">↗️ Logout</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-container">
+    <!-- Welcome Message -->
+    <div class="welcome-message">
+      <h1>Welcome back, {{ request.user.username }}!</h1>
+      <p>Here's what's happening in your feed</p>
+    </div>
+
+    <!-- Posts Feed -->
+    {% if posts %}
+      {% for post in posts %}
+        <div class="post-card">
+          <!-- Post Header -->
+          <div class="post-header">
+            <div class="avatar">
+              {% if post.user and post.author.username %}
+                {{ post.author.username|first|upper }}
+              {% else %}
+                ?
+              {% endif %}
+            </div>
+            <div>
+              {% if post.user and post.author.username %}
+                <a href="{% url 'profile' username=post.author.username %}">
+                  {{ post.author.username }}
+                </a>
+              {% else %}
+                <span>Unknown User</span>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Post Image -->
+          <img src="{{ post.image.url }}" alt="Post image" class="post-image">
+
+          <!-- Post Actions -->
+          <div class="post-actions">
+            <form action="{% url 'toggle_like' post.id %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="like-btn">
+                {% if post.liked_by_user %}
+                  ❤️
+                {% else %}
+                  🤍
+                {% endif %}
+              </button>
+            </form>
+          </div>
+
+          <!-- Likes Count -->
+          <p class="likes-count">
+            {{ post.likes.count }} like{{ post.likes.count|pluralize }}
+          </p>
+
+          <!-- Caption -->
+          {% if post.caption %}
+            <p class="post-caption">
+              <strong>{{ post.author.username }}</strong> {{ post.caption }}
+            </p>
+          {% endif %}
+
+          <!-- Time -->
+          <p class="post-time">{{ post.created_at|timesince }} ago</p>
+
+          <!-- Comments Section -->
+          <div class="comments-section">
+            {% if post.comments.count > 0 %}
+              <div class="comments-header">
+                View all {{ post.comments.count }} comment{{ post.comments.count|pluralize }}
+              </div>
+              <ul class="comments-list">
+                {% for comment in post.comments.all|slice:":3" %}
+                  <li class="comment-item">
+                    <b>{{ comment.user.username }}</b>{{ comment.text }}
+                  </li>
+                {% empty %}
+                  <li class="comment-item" style="color: #8e8e8e;">No comments yet.</li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+
+            <!-- Add Comment Form -->
+            <form action="{% url 'add_comment' post.id %}" method="post" class="comment-form">
+              {% csrf_token %}
+              <input type="text" name="text" placeholder="Add a comment..." required class="comment-input">
+              <button type="submit" class="comment-btn">Post</button>
+            </form>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="no-posts">
+        <h2>No posts yet</h2>
+        <p>Start following people or create your first post!</p>
+      </div>
+    {% endif %}
+  </div>
+</body>
+</html>

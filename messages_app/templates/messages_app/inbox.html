@@ -1,0 +1,33 @@
+<div class="sidebar-conversations">
+  <h3>Recent Conversations</h3>
+
+  {% if messages %}
+    <ul class="conversation-list">
+      {% for msg in messages %}
+        <li class="conversation-item">
+          {% if msg.sender == request.user %}
+            <a href="{% url 'messages_app:chat_view' username=msg.recipient.username %}">
+              <strong>{{ msg.recipient.username }}</strong>
+            </a>
+          {% else %}
+            <a href="{% url 'messages_app:chat_view' username=msg.sender.username %}">
+              <strong>{{ msg.sender.username }}</strong>
+            </a>
+          {% endif %}
+          <br>
+          <small>{{ msg.body|truncatechars:40 }}</small><br>
+          <span class="timestamp">{{ msg.timestamp|timesince }} ago</span>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No conversations yet. Start messaging!</p>
+  {% endif %}
+
+  <hr>
+
+  <form method="GET" action="{% url 'messages_app:start_conversation' %}">
+    <input type="text" name="username" placeholder="Enter username..." required>
+    <button type="submit">Start Conversation</button>
+  </form>
+</div>
